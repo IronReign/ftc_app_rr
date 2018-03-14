@@ -77,6 +77,8 @@ import static org.firstinspires.ftc.teamcode.Pose.servoNormalize;
 
 public class Game_6832 extends LinearOpMode {
 
+    //hi im testing something
+
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
