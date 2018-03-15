@@ -322,12 +322,11 @@ public class Game_6832 extends LinearOpMode {
                 robot.updateSensors();
             }
             else {
-                robot.ledSystem.offPos();
                 robot.stopAll();
             }
 
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
-        }
+        }robot.ledSystem.offPos();
     }
 
     public void testLED(){
