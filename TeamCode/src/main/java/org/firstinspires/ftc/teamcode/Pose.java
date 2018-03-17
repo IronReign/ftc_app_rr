@@ -782,6 +782,9 @@ public class Pose
      * @param forward sets how much power will be provided in the forwards direction
      * @param strafe sets how much power will be provided in the left strafe direction
      * @param rotate sets how much power will be provided to clockwise rotation
+     *
+     * code was implemented from the WPLIB Library for FRC programming.
+     * This is avalible on github at https://github.com/eshsrobotics/wpilib-java/blob/master/src/edu/wpi/first/wpilibj/RobotDrive.java
      */
     public void driveMixerMecField(double forward, double strafe , double rotate, double gyro){
 
