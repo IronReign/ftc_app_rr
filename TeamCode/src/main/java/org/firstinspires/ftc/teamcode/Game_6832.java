@@ -579,6 +579,7 @@ public class Game_6832 extends LinearOpMode {
 
         else {
             robot.driveMixerMec(pwrFwd, pwrStf, pwrRot);
+            //robot.driveMixerMecField(pwrFwd,pwrStf,pwrRot,robot.getHeading());
         }
 
 //        if(robot.glyphSystem.getMotorLiftPosition() <= 2500) {
