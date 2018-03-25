@@ -1,3 +1,4 @@
+
 /*
 Copyright (c) 2016 Robert Atkinson
 
@@ -1938,3 +1939,4 @@ public class Game_6832 extends LinearOpMode {
         return System.nanoTime() + (long) (seconds * 1e9);
     }
 }
+
