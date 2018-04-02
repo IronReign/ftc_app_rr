@@ -986,165 +986,130 @@ public class Game_6832 extends LinearOpMode {
 
     private void autonomous3() {
 
-        switch(autoStage){
+        switch(autoStage) {
             case 0:
-                if(autoSetup()) autoStage = 8;
+                robot.setZeroHeading();
+                robot.resetMotors(true);
+                robot.glyphSystem.tiltPhoneDown();
+                robot.glyphSystem.closeGrip();
+                robot.glyphSystem.collect();
+                savedVuMarkCodex = getRelicCodex();
+                robot.ledSystem.offPos();
+                autoStage++;
                 break;
-            case 8: //turn parallel to the wall
-                if(isBlue){
-                    if(robot.rotateIMU(270, 3.5)){
-                        robot.resetMotors(true);
-                        autoStage++;
-                    }
-                }
-                else{
-                    if(robot.rotateIMU(90, 3.5)){
-                        robot.resetMotors(true);
-                        autoStage++;
-                    }
+            case 1:
+                if (robot.jewel.extendArm()) {
+                    robot.glyphSystem.hold();
+                    autoStage++;
                 }
                 break;
-            case 9: //drive off the balance stone
-                if(robot.driveForward(false, .6, .5)) {
+            case 2:
+                autoStage++;
+//                }
+                break;
+            case 3:
+                autoStage++;
+//                }
+                break;
+            case 4:
+                robot.resetMotors(true);
+                autoStage++;
+//                }
+                break;
+
+            case 5:
+                autoStage++;
+//                }
+                break;
+
+            case 6:
+                if (autoTimer < System.nanoTime()) {
+                    robot.resetMotors(true);
+                    jewelMatches = robot.doesJewelMatch(isBlue);
+                    autoTimer = futureTime(1.5f);
+
+                    if ((isBlue && jewelMatches) || (!isBlue && jewelMatches)) {
+
+                        robot.jewel.hitLeft();
+                    } else {
+
+                        robot.jewel.hitRight();
+                    }
+                    autoStage++;
+                }
+                break;
+            case 7:
+                if (autoTimer < System.nanoTime()) { //wait for kick
+                    robot.jewel.center();
+                    if (robot.jewel.retractArm()) {
+                        if (isBlue) {
+                            robot.ledSystem.bluePos();
+                            autoSetupStage++;
+                        } else {
+                            robot.ledSystem.redPos();
+                            autoSetupStage++;
+                        }
+
+                    }
+                    autoStage++;
+                }
+                break;
+            case 8:
+                if (robot.jewel.retractArm()) {
+                    autoStage++;
+                }
+                break;
+            case 9:
+                autoStage++;
+//                }
+                break;
+            case 10:
+                if (robot.driveStrafe(!isBlue, .5, .5)||robot.glyphSystem.goLiftCollect()) {
                     robot.resetMotors(true);
                     autoStage++;
                 }
                 break;
-            case 10: //re-orient robot
-                if(isBlue){
-                    if(robot.rotateIMU(270, 1.5)){
-                        robot.resetMotors(true);
-                        autoStage++;
-                    }
-                }
-                else{
-                    if(robot.rotateIMU(90, 1.5)){
-                        robot.resetMotors(true);
-                        autoStage++;
-                    }
-                }
-                break;
-            case 11: //turn to proper crypto box column based on vuforia target
-                if(isBlue) {
-                    switch (savedVuMarkCodex) {
-                        case 0:
-                            if (robot.driveStrafe(false, .185, .5)) {
-                                robot.resetMotors(true);
-//                                robot.glyphSystem.goLiftAuto();
-                                autoStage++;
-                                 //robot.doTheAutonomous("900 points, both cryptoboxes"); robot.plsDoIt();
-                            }
-                            break;
-                        case 1:
-                            if (robot.driveStrafe(false, .385, .5)) {
-                                robot.resetMotors(true);
-//                                robot.glyphSystem.goLiftAuto();
-                                autoStage++;
-                            }
-                            break;
-                        case 2:
-                            if (robot.driveStrafe(false, .585, .5)) {
-                                robot.resetMotors(true);
-//                                robot.glyphSystem.goLiftAuto();
-                                autoStage++;
-                            }
-                            break;
-                    }
-                }
-                else{
-                    switch (savedVuMarkCodex) {
-                        case 0:
-                            if (robot.rotateIMU(30, 1.5)) {
-                                robot.resetMotors(true);
-//                                robot.glyphSystem.goLiftAuto();
-                                autoStage++;
-                            }
-                            break;
-                        case 1:
-                            if (robot.rotateIMU(40, 1.5)) {
-                                robot.resetMotors(true);
-//                                robot.glyphSystem.goLiftAuto();
-                                autoStage++;
-                            }
-                            break;
-                        case 2:
-                            if (robot.rotateIMU(60, 1.5)) {
-                                robot.resetMotors(true);
-//                                robot.glyphSystem.goLiftAuto();
-                                autoStage++;
-                            }
-                            break;
-                    }
-                }
-                break;
-//            case 11: //turn to crypto box
-//                if(isBlue){
-//                    if(robot.rotateIMU(325, 1.5)){
-//                        robot.resetMotors(true);
-//                        autoStage++;
-//                    }
-//                }
-//                else{
-//                    if(robot.rotateIMU(35, 1.5)){
-//                        robot.resetMotors(true);
-//                        autoStage++;
-//                    }
-//                }
-//                autoStage++;
-//                break;
-            case 12: //deposit glyph
-                if(robot.driveForward(false, 1.0, .50)) {
+
+            case 11: //drive to proper crypto box column based on vuforia target
+//
+                if (robot.driveStrafe(isBlue, .1, .35)||robot.glyphSystem.goLiftCollect()) {
                     robot.resetMotors(true);
-                    robot.glyphSystem.releaseGrip();
-                    robot.glyphSystem.setMotorLeft(-1);
-                    robot.glyphSystem.setMotorRight(-1);
-                    autoTimer = futureTime(1.5f);
+                    autoStage++;
+                }
+                break;
+            case 12:
+                if(robot.driveStrafe(!isBlue, .12, .35)&&robot.glyphSystem.goLiftCollect()) {
+                    robot.resetMotors(true);
+                    robot.glyphSystem.collect();
                     autoStage++;
                 }
                 break;
             case 13:
-                if(autoTimer < System.nanoTime()){
+                if(robot.driveForward(true, 1.3,.5 )){
+                    robot.resetMotors(true);
                     autoStage++;
+                    autoTimer =futureTime(1.5f);
                 }
                 break;
-            case 14: //back away from crypto box
-                if(robot.driveForward(true, .05, .50)){
-                    robot.resetMotors(true);
-                    robot.glyphSystem.setMotorLeft(0);
-                    robot.glyphSystem.setMotorRight(0);
+            case 14:
+                if(autoTimer<System.nanoTime()){
                     autoStage++;
                 }
                 break;
             case 15:
-                autoTimer = futureTime(1.5f);
-                robot.glyphSystem.closeGrip();
-                autoStage++;
-                break;
-            case 16:
-                if(autoTimer < System.nanoTime()){
+                if(robot.driveForward(false, 1.3,.5 )){
+                    robot.resetMotors(true);
+                    robot.glyphSystem.hold();
                     autoStage++;
                 }
                 break;
-            case 17:
-                //tap glyph to make sure its fully inserted
-//                if(robot.driveForward(false, .35, .50)){
-//                    robot.resetMotors(true);
-                autoStage++;
-//                }
+            case 16:
+                if(robot.rotateIMU(180, 1)){
+                    robot.resetMotors(true);
+                    autoStage++;
+                }
                 break;
-            case 18:
-                //back away from crypto box but stay in parking zone
-//                if(robot.driveForward(true, .05, .30)){
-//                    robot.resetMotors(true);
-                autoStage++;
-//                }
-                break;
-            default:
-                robot.resetMotors(true);
-                autoStage = 0;
-                active = false;
-                state = 0;
-                break;
+            //robot is now facing cryptobox from the center position
         }
     }
 
