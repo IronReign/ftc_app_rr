@@ -1,3 +1,4 @@
+
 /*
 Copyright (c) 2016 Robert Atkinson
 
@@ -353,17 +354,16 @@ public class Game_6832 extends LinearOpMode {
 
 
         }
-        if(gamepad1.y) {
-            robot.driveToBeacon(beaconTarget, isBlue, 0, distance, .5, true, false);
+        if(toggleAllowed(gamepad1.y, y)) {
+            savedVuMarkCodex = getRelicCodex();
+            vuFlashDemo = true;
         }
-
-
-        if(gamepad1.a) {
-            robot.driveToBeacon(beaconTarget, isBlue, 0, distance, .5, false, false);
+        if(vuFlashDemo){
+            if(flashRelicCodex()){
+                vuFlashDemo = false;
+            }
         }
-
     }
-
 
 
 
@@ -566,8 +566,7 @@ public class Game_6832 extends LinearOpMode {
         pwrStf = pwrDamper * gamepad1.left_stick_x;
         pwrRot = -pwrDamper * .75 * gamepad1.right_stick_x;
 
-
-//        pwrRot += .33 * (gamepad1.right_trigger - gamepad1.left_trigger);
+        pwrRot += .33 * (gamepad1.right_trigger - gamepad1.left_trigger);
 
         pwrFwdL = pwrDamper * gamepad1.left_stick_y;
         pwrStfL = pwrDamper * gamepad1.left_stick_x;
@@ -575,15 +574,14 @@ public class Game_6832 extends LinearOpMode {
         pwrFwdR = pwrDamper * gamepad1.right_stick_y;
         pwrStfR = pwrDamper * gamepad1.right_stick_x;
 
-        if(enableTank) {
-//            robot.driveMixerMecTank(pwrFwdL, pwrStfL, pwrFwdR, pwrStfR);
-            robot.driveMixerMecField(pwrFwd, pwrStf, pwrRot, robot.getHeading());
+        if(enableTank){
+            robot.driveMixerMecTank(pwrFwdL, pwrStfL, pwrFwdR, pwrStfR);
         }
 
-        else{
+        else {
             robot.driveMixerMec(pwrFwd, pwrStf, pwrRot);
+            //robot.driveMixerMecField(pwrFwd,pwrStf,pwrRot,robot.getHeading());
         }
-
 
 //        if(robot.glyphSystem.getMotorLiftPosition() <= 2500) {
 //            robot.glyphSystem.setMotorLeft(gamepad2.left_stick_y*beaterDamper);
@@ -614,8 +612,7 @@ public class Game_6832 extends LinearOpMode {
                 liftHome = false;
                 liftCollect = false;
             }
-        }
-        else if(robot.glyphSystem.motorLift.getCurrentPosition() > 50 ){
+        }else if(robot.glyphSystem.motorLift.getCurrentPosition() > 50 ){
             if (toggleAllowed(gamepad1.y, y)) {
                 robot.glyphSystem.tiltPhoneUp();
                 liftVerticalDeposit = false;
@@ -656,12 +653,6 @@ public class Game_6832 extends LinearOpMode {
 
 
         if(toggleAllowed(gamepad1.dpad_up, dpad_up)){
-            if (robot.glyphSystem.motorLift.getCurrentPosition() < -15) {
-                liftVerticalDeposit = false;
-                liftDeposit = false;
-                liftHome = true;
-                liftCollect = false;
-            }
             if(robot.glyphSystem.motorLift.getCurrentPosition() > robot.glyphSystem.liftDeposit - 15){
                 liftVerticalDeposit = true;
                 liftDeposit = false;
@@ -678,25 +669,10 @@ public class Game_6832 extends LinearOpMode {
 
 
         if(toggleAllowed(gamepad1.dpad_down, dpad_down)){
-            if(robot.glyphSystem.motorLift.getCurrentPosition() > robot.glyphSystem.liftCollect){
-                if(robot.glyphSystem.motorLift.getCurrentPosition()>robot.glyphSystem.liftFlatUpper) {
-                    liftVerticalDeposit = false;
-                    liftDeposit = false;
-                    liftHome = true;
-                    liftCollect = false;
-                }else{
-                    liftVerticalDeposit = false;
-                    liftDeposit = false;
-                    liftHome = false;
-                    liftCollect = true;
-                }
-            }
-            else {
-                liftVerticalDeposit = false;
-                liftDeposit = false;
-                liftHome = true;
-                liftCollect = false;
-            }
+            liftCollect = true;
+            liftVerticalDeposit = false;
+            liftHome = false;
+            liftDeposit = false;
         }
 //            if(toggleAllowed(gamepad1.dpad_down, dpad_down)){
 //                liftVerticalDeposit = false;
@@ -775,8 +751,8 @@ public class Game_6832 extends LinearOpMode {
 
 
         if(.4 < robot.glyphSystem.servoBeltLeft.getPosition() && robot.glyphSystem.servoBeltLeft.getPosition() < .6){
-            robot.glyphSystem.setMotorLeft(gamepad1.right_trigger-gamepad1.left_trigger);
-            robot.glyphSystem.setMotorRight(-(gamepad1.right_trigger-gamepad1.left_trigger));
+            robot.glyphSystem.setMotorLeft(gamepad1.right_stick_y);
+            robot.glyphSystem.setMotorRight(-gamepad1.right_stick_y);
         }
         else{
             robot.glyphSystem.collect();
@@ -815,7 +791,7 @@ public class Game_6832 extends LinearOpMode {
 //            pwrDamper = 1;
 //        }
 
-        if(toggleAllowed(gamepad1.left_bumper, left_bumper)){
+        if(toggleAllowed(gamepad2.y, y)){
             enableTank = !enableTank;
         }
 
@@ -1963,3 +1939,4 @@ public class Game_6832 extends LinearOpMode {
         return System.nanoTime() + (long) (seconds * 1e9);
     }
 }
+

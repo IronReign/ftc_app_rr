@@ -845,13 +845,16 @@ public class Pose
         //retrieve drive values
         double forwardIn=forward;
         double strafeIn = strafe;
+
         double[] temp=new double[2];
         temp= rotateVector(forwardIn,strafeIn,gyro);//use angle to get true x-y values
         forwardIn=temp[0];//set drive values to modified values
         strafeIn=temp[1];
 
         //assign all speeds to array to configure speeds
+
         double allWheels[]=new double[4];//let front left=0, front right=1, back left = 2, back right =3;
+
         allWheels[0]=forwardIn+strafeIn+rotate;
         allWheels[1]=forwardIn-strafeIn-rotate;
         allWheels[2]=forwardIn-strafeIn+rotate;
