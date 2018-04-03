@@ -1072,13 +1072,14 @@ public class Game_6832 extends LinearOpMode {
 
             case 11: //drive to proper crypto box column based on vuforia target
 //
-                if (robot.driveStrafe(isBlue, .1, .35)||robot.glyphSystem.goLiftCollect()) {
+                if (robot.driveStrafe(isBlue, .1, .35)) {
                     robot.resetMotors(true);
                     autoStage++;
                 }
+                robot.glyphSystem.goLiftCollect();
                 break;
             case 12:
-                if(robot.driveStrafe(!isBlue, .12, .35)&&robot.glyphSystem.goLiftCollect()) {
+                if(robot.driveStrafe(!isBlue, .12, .35)&robot.glyphSystem.goLiftCollect()) {
                     robot.resetMotors(true);
                     robot.glyphSystem.collect();
                     autoStage++;
@@ -1097,19 +1098,75 @@ public class Game_6832 extends LinearOpMode {
                 }
                 break;
             case 15:
-                if(robot.driveForward(false, 1.3,.5 )){
+                /**
+                if(robot.driveForward(false, 1.3,.5 )&robot.rotateIMU(180, 1)){
                     robot.resetMotors(true);
                     robot.glyphSystem.hold();
                     autoStage++;
-                }
+                }**/
+                //this won't work because driveForward relies on imu position. use field oriented code instead
                 break;
             case 16:
-                if(robot.rotateIMU(180, 1)){
-                    robot.resetMotors(true);
-                    autoStage++;
+                if(isBlue) {//change all angles because im not sure what they are rn
+                    switch (savedVuMarkCodex) {
+                        case 0:
+                            if (robot.rotateIMU(-10, 1)) {
+                                robot.resetMotors(true);
+//                                robot.glyphSystem.goLiftAuto();
+                                autoStage++;
+                            }
+                            break;
+                        case 1:
+                            if (robot.rotateIMU(0, 1)) {
+                                robot.resetMotors(true);
+//                                robot.glyphSystem.goLiftAuto();
+                                autoStage++;
+                            }
+                            break;
+                        case 2:
+                            if (robot.rotateIMU(10, 1)) {
+                                robot.resetMotors(true);
+//                                robot.glyphSystem.goLiftAuto();
+                                autoStage++;
+                            }
+                            break;
+                    }
+                }
+                else{
+                    switch (savedVuMarkCodex) {
+                        case 0:
+                            if (robot.rotateIMU(-10 , 1)) {
+                                robot.resetMotors(true);
+//                                robot.glyphSystem.goLiftAuto();
+                                autoStage++;
+                            }
+                            break;
+                        case 1:
+                            if (robot.rotateIMU(0, 1)) {
+                                robot.resetMotors(true);
+//                                robot.glyphSystem.goLiftAuto();
+                                autoStage++;
+                            }
+                            break;
+                        case 2:
+                            if (robot.rotateIMU(10, 1)) {
+                                robot.resetMotors(true);
+//                                robot.glyphSystem.goLiftAuto();
+                                autoStage++;
+                            }
+                            break;
+                    }
                 }
                 break;
-            //robot is now facing cryptobox from the center position
+            case 17:
+                //drive forward
+                break;
+            case 18:
+                //deposit
+                break;
+            case 19:
+                //backup
+                break;
         }
     }
 
